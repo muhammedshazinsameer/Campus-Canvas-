@@ -56,7 +56,7 @@ export default function PendingQueuePage({ onPendingCountChange }) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-[#1a1917] text-white px-4 py-3 rounded shadow-lg flex items-center gap-2 text-xs font-sans border border-[#853528]">

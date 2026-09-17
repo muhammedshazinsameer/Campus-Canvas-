@@ -19,7 +19,7 @@ export default function AdminNavbar({ pendingCount = 0, pendingReportsCount = 0 
 
   return (
     <header className="bg-[#fcfbf9] border-b border-[#e8e2d2] sticky top-0 z-30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Title */}
         <Link
           to="/"
