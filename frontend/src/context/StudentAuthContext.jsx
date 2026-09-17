@@ -223,7 +223,7 @@ export function StudentAuthProvider({ children }) {
         throw new Error('Please sign in with your official Yenepoya college email (@yenepoya.edu.in).');
       }
 
-      const userObject = {
+      let userObject = {
         id: data.user.id,
         name: userProfile?.name || data.user.user_metadata?.name || emailLower.split('@')[0],
         email: emailLower,
@@ -233,10 +233,28 @@ export function StudentAuthProvider({ children }) {
         createdAt: userProfile?.createdAt || data.user.created_at
       };
 
-      // 3. Store session & state
-      localStorage.setItem('cc_student_token', data.session.access_token);
+      // 3. Sync with backend to issue unified backend JWT and store state
+      let activeToken = data.session.access_token;
+      try {
+        const syncRes = await syncGoogleUser({
+          id: data.user.id,
+          email: emailLower,
+          name: userObject.name,
+          avatarUrl: userObject.avatarUrl
+        });
+        if (syncRes?.token) {
+          activeToken = syncRes.token;
+          if (syncRes.user) {
+            userObject = { ...userObject, ...syncRes.user, role: role === 'editor' ? 'editor' : (userProfile?.role || 'student') };
+          }
+        }
+      } catch (syncErr) {
+        console.warn('Backend sync warning on password login:', syncErr.message);
+      }
+
+      localStorage.setItem('cc_student_token', activeToken);
       localStorage.setItem('cc_student_user', JSON.stringify(userObject));
-      setStudentToken(data.session.access_token);
+      setStudentToken(activeToken);
       setStudentUser(userObject);
       setIsAuthModalOpen(false);
       setOauthError(null);
