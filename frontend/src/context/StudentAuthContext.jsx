@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { syncGoogleUser, getStudentMe } from '../api/client';
 import { supabase, isSupabaseConfigured } from '../api/supabaseClient';
 
@@ -10,6 +10,7 @@ export function StudentAuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [oauthError, setOauthError] = useState(null);
+  const isLoggingOut = useRef(false);
 
   // Helper to sync Supabase user with User table & manage session
   const handleSupabaseSession = async (session) => {
@@ -152,7 +153,10 @@ export function StudentAuthProvider({ children }) {
                 await handleSupabaseSession(session);
               }
             } else if (event === 'SIGNED_OUT') {
-              logout();
+              localStorage.removeItem('cc_student_token');
+              localStorage.removeItem('cc_student_user');
+              setStudentToken(null);
+              setStudentUser(null);
             }
           });
           authListener = data?.subscription;
@@ -268,13 +272,19 @@ export function StudentAuthProvider({ children }) {
     return true;
   };
 
-  const logout = () => {
-    localStorage.removeItem('cc_student_token');
-    localStorage.removeItem('cc_student_user');
-    setStudentToken(null);
-    setStudentUser(null);
-    if (isSupabaseConfigured && supabase) {
-      supabase.auth.signOut().catch(() => {});
+  const logout = async () => {
+    if (isLoggingOut.current) return;
+    isLoggingOut.current = true;
+    try {
+      localStorage.removeItem('cc_student_token');
+      localStorage.removeItem('cc_student_user');
+      setStudentToken(null);
+      setStudentUser(null);
+      if (isSupabaseConfigured && supabase) {
+        await supabase.auth.signOut({ scope: 'local' }).catch(() => {});
+      }
+    } finally {
+      isLoggingOut.current = false;
     }
   };
 
