@@ -101,7 +101,7 @@ export default function SearchPage() {
     sortOption !== 'newest';
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
       <div className="border-b border-[#e8e2d2] pb-6 mb-8">
         <h2 className="font-editorial text-3xl sm:text-4xl font-bold text-[#1a1917] mb-2">

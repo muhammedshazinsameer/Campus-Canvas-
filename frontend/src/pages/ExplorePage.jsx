@@ -31,7 +31,7 @@ export default function ExplorePage() {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Editorial Header Banner */}
       <section className="mb-12 border-b border-[#e8e2d2] pb-10 text-center">
         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#f2ece0] text-[#8c4335] text-xs font-semibold uppercase tracking-widest mb-4">

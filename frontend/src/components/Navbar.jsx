@@ -62,7 +62,7 @@ export default function Navbar() {
         <span>YENEPOYA SCHOOL OF ENGINEERING & TECHNOLOGY    | YENLIT</span>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col md:flex-row items-center justify-between gap-4">
         {/* Masthead */}
         <Link
           to="/"
