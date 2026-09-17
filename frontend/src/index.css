@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #faf7f0;
+    color: #1a1917;
+    font-family: 'Newsreader', 'Lora', Georgia, serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .font-editorial {
+    font-family: 'Playfair Display', 'Cinzel', Georgia, serif;
+  }
+}
+
+/* Custom literary drop-cap */
+.drop-cap::first-letter {
+  font-family: 'Playfair Display', serif;
+  float: left;
+  font-size: 3.8rem;
+  line-height: 0.8;
+  padding-top: 4px;
+  padding-right: 10px;
+  padding-bottom: 2px;
+  color: #9d4233;
+  font-weight: 600;
+}
+
+/* Verse and poetry formatting */
+.poem-content {
+  white-space: pre-wrap;
+  line-height: 1.85;
+  letter-spacing: 0.01em;
+}
+
+/* Column masonry helpers */
+.masonry-grid {
+  column-gap: 1.75rem;
+}
+
+@media (min-width: 640px) {
+  .masonry-grid {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .masonry-grid {
+    column-count: 3;
+  }
+}
+
+.masonry-item {
+  break-inside: avoid;
+  margin-bottom: 1.75rem;
+}

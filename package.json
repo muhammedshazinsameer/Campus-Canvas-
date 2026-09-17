@@ -1,0 +1,10 @@
+{
+  "name": "campus-canvas",
+  "version": "1.0.0",
+  "description": "Campus Canvas — A Canvas for Every Creative Mind",
+  "scripts": {
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:admin": "cd admin && npm run dev"
+  }
+}

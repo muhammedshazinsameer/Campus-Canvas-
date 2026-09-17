@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #faf7f0;
+    color: #1a1917;
+    font-family: 'Newsreader', 'Lora', Georgia, serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, .font-editorial {
+    font-family: 'Playfair Display', 'Cinzel', Georgia, serif;
+  }
+}
