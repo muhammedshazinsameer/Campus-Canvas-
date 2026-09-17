@@ -68,14 +68,16 @@ app.use(
   })
 );
 
-// 4. Strict CORS Configuration (Strict Whitelist, No Wildcards)
+// 4. Strict CORS Configuration (Whitelist + Vercel/Render preview support)
+const parseOrigins = (val) => (val ? val.split(',').map((s) => s.trim()) : []);
+
 const allowedOrigins = [
   'http://localhost:5173', // Local Student Frontend
   'http://localhost:5174', // Local Editor Admin Dashboard
   'http://127.0.0.1:5173',
   'http://127.0.0.1:5174',
-  process.env.FRONTEND_URL,
-  process.env.ADMIN_URL
+  ...parseOrigins(process.env.FRONTEND_URL),
+  ...parseOrigins(process.env.ADMIN_URL)
 ].filter(Boolean);
 
 app.use(
@@ -84,7 +86,20 @@ app.use(
       // Allow requests with no origin (e.g. server-to-server health checks, curl)
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
+      let isAllowed = allowedOrigins.includes(origin);
+
+      if (!isAllowed) {
+        try {
+          const hostname = new URL(origin).hostname;
+          if (hostname.endsWith('.vercel.app') || hostname.endsWith('.onrender.com')) {
+            isAllowed = true;
+          }
+        } catch {
+          // Invalid origin URL format
+        }
+      }
+
+      if (isAllowed) {
         callback(null, true);
       } else {
         callback(new Error(`Origin ${origin} not allowed by CORS policy`));
