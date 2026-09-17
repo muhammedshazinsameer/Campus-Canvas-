@@ -342,22 +342,17 @@ export default function Navbar() {
                     </div>
 
                     <div className="p-3 space-y-2">
-                      {/* Direct Student Sign In with Google */}
+                      {/* Student Sign In Modal Popup */}
                       <button
                         type="button"
-                        onClick={async () => {
+                        onClick={() => {
                           setIsProfileOpen(false);
-                          try {
-                            await signInWithSupabaseGoogle();
-                          } catch (err) {
-                            console.error('Google sign in error:', err);
-                            openAuthModal('student');
-                          }
+                          openAuthModal('student');
                         }}
                         className="w-full flex items-center justify-center gap-2 py-2 px-3 bg-[#9d4233] hover:bg-[#853528] text-white rounded font-medium text-xs shadow-xs transition-colors cursor-pointer"
                       >
                         <User className="w-3.5 h-3.5" />
-                        <span>Student Sign In (Google)</span>
+                        <span>Student Sign In</span>
                       </button>
 
                       <div className="pt-2 border-t border-[#ece7d9]">
