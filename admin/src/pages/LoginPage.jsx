@@ -123,7 +123,7 @@ export default function LoginPage() {
 
           <div className="mt-6 pt-4 border-t border-[#ece6d8] text-center">
             <a
-              href={import.meta.env.VITE_FRONTEND_URL || 'http://localhost:5173'}
+              href={import.meta.env.VITE_FRONTEND_URL || 'https://campus-canvas-chi.vercel.app'}
               className="text-xs text-[#8c8477] hover:text-[#1a1917] transition-colors font-sans"
             >
               &larr; Return to Campus Canvas

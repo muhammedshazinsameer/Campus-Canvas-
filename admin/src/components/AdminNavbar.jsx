@@ -103,7 +103,7 @@ export default function AdminNavbar({ pendingCount = 0, pendingReportsCount = 0 
           </Link>
 
           <a
-            href={import.meta.env.VITE_FRONTEND_URL || 'http://localhost:5173'}
+            href={import.meta.env.VITE_FRONTEND_URL || 'https://campus-canvas-chi.vercel.app'}
             target="_blank"
             rel="noreferrer"
             className="flex items-center gap-1 px-3 py-1.5 text-[#787163] hover:text-[#1a1917] hover:bg-[#f4efe4] rounded transition-colors"
