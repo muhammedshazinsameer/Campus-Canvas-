@@ -34,7 +34,8 @@ export default function StudentAuthModal() {
     closeAuthModal,
     signInWithSupabaseGoogle,
     signInWithPassword,
-    oauthError
+    oauthError,
+    authModalInitialTab
   } = useStudentAuth();
 
   const [activeTab, setActiveTab] = useState('student'); // 'student' | 'editor'
@@ -50,15 +51,18 @@ export default function StudentAuthModal() {
     }
   }, [oauthError]);
 
-  // Reset modal error and inputs when reopened/closed
+  // Reset modal error and inputs when reopened/closed, sync initial tab
   useEffect(() => {
-    if (!isAuthModalOpen) {
+    if (isAuthModalOpen) {
+      if (authModalInitialTab) {
+        setActiveTab(authModalInitialTab);
+      }
       setError(null);
       setLoading(false);
       setEmail('');
       setPassword('');
     }
-  }, [isAuthModalOpen]);
+  }, [isAuthModalOpen, authModalInitialTab]);
 
   if (!isAuthModalOpen) return null;
 

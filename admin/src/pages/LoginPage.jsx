@@ -4,8 +4,14 @@ import { useAuth } from '../context/AuthContext';
 import { Feather, Shield, AlertCircle, KeyRound, Mail, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
-  const { loginUser } = useAuth();
+  const { loginUser, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/', { replace: true });
+    }
+  }, [isAuthenticated, navigate]);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

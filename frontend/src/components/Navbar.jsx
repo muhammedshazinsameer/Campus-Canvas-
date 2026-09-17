@@ -6,7 +6,7 @@ import yenepoyaLogo from '../assets/yenepoya-logo.png';
 
 export default function Navbar() {
   const location = useLocation();
-  const { studentUser, isAuthenticated, logout, openAuthModal } = useStudentAuth();
+  const { studentUser, studentToken, isAuthenticated, logout, openAuthModal, signInWithSupabaseGoogle } = useStudentAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const profileRef = useRef(null);
 
@@ -275,7 +275,11 @@ export default function Navbar() {
                         {/* Editor Portal link conditionally rendered ONLY for role === 'editor' */}
                         {studentUser?.role === 'editor' && (
                           <a
-                            href={import.meta.env.VITE_ADMIN_URL || 'https://campus-canvas-admin.vercel.app'}
+                            href={
+                              studentToken
+                                ? `${import.meta.env.VITE_ADMIN_URL || 'https://campus-canvas-admin.vercel.app'}#token=${encodeURIComponent(studentToken)}`
+                                : (import.meta.env.VITE_ADMIN_URL || 'https://campus-canvas-admin.vercel.app')
+                            }
                             target="_blank"
                             rel="noreferrer"
                             onClick={() => setIsProfileOpen(false)}
@@ -338,34 +342,40 @@ export default function Navbar() {
                     </div>
 
                     <div className="p-3 space-y-2">
+                      {/* Direct Student Sign In with Google */}
                       <button
                         type="button"
-                        onClick={() => {
+                        onClick={async () => {
                           setIsProfileOpen(false);
-                          openAuthModal();
+                          try {
+                            await signInWithSupabaseGoogle();
+                          } catch (err) {
+                            console.error('Google sign in error:', err);
+                            openAuthModal('student');
+                          }
                         }}
                         className="w-full flex items-center justify-center gap-2 py-2 px-3 bg-[#9d4233] hover:bg-[#853528] text-white rounded font-medium text-xs shadow-xs transition-colors cursor-pointer"
                       >
                         <User className="w-3.5 h-3.5" />
-                        <span>Student Sign In</span>
+                        <span>Student Sign In (Google)</span>
                       </button>
 
                       <div className="pt-2 border-t border-[#ece7d9]">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setIsProfileOpen(false);
-                            openAuthModal();
-                          }}
+                        {/* Direct Editor Portal Link */}
+                        <a
+                          href={import.meta.env.VITE_ADMIN_URL || 'https://campus-canvas-admin.vercel.app'}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={() => setIsProfileOpen(false)}
                           className="w-full flex items-center justify-between px-2.5 py-1.5 rounded text-xs text-[#635d54] hover:text-[#853528] hover:bg-[#f4efe4] transition-colors cursor-pointer"
-                          title="Open Editor Login"
+                          title="Open Editor Portal"
                         >
                           <span className="flex items-center gap-2">
                             <Shield className="w-3.5 h-3.5 text-[#853528]" />
                             <span className="font-medium">Editor Sign In</span>
                           </span>
-                          <span className="text-[10px] text-[#8c8477]">Login &rarr;</span>
-                        </button>
+                          <span className="text-[10px] text-[#8c8477]">Portal &rarr;</span>
+                        </a>
                       </div>
                     </div>
                   </div>

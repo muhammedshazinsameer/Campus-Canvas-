@@ -9,6 +9,7 @@ export function StudentAuthProvider({ children }) {
   const [studentToken, setStudentToken] = useState(localStorage.getItem('cc_student_token') || null);
   const [loading, setLoading] = useState(true);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authModalInitialTab, setAuthModalInitialTab] = useState('student');
   const [oauthError, setOauthError] = useState(null);
   const isLoggingOut = useRef(false);
 
@@ -54,27 +55,7 @@ export function StudentAuthProvider({ children }) {
     const avatarUrl = userProfile?.avatarUrl || userMeta.avatar_url || userMeta.picture || null;
     const campusId = userProfile?.campusId || (email.includes('@') ? email.split('@')[0] : null);
 
-    // If editor, directly establish editor session
-    if (role === 'editor') {
-      const editorUser = {
-        id: session.user.id,
-        email,
-        name,
-        role: 'editor',
-        avatarUrl,
-        campusId,
-        createdAt: userProfile?.createdAt || session.user.created_at
-      };
-      localStorage.setItem('cc_student_token', session.access_token);
-      localStorage.setItem('cc_student_user', JSON.stringify(editorUser));
-      setStudentToken(session.access_token);
-      setStudentUser(editorUser);
-      setIsAuthModalOpen(false);
-      setOauthError(null);
-      return;
-    }
-
-    // 3. For student users, sync with backend (auto-provisions & syncs info)
+    // 3. Sync profile with backend (auto-provisions & issues unified JWT token for students and editors)
     try {
       const res = await syncGoogleUser({
         id: session.user.id, // Supabase auth.users UUID
@@ -86,7 +67,7 @@ export function StudentAuthProvider({ children }) {
       if (res.token && res.user) {
         const syncedUser = {
           ...res.user,
-          role: userProfile?.role || res.user.role || 'student'
+          role: role === 'editor' ? 'editor' : (userProfile?.role || res.user.role || 'student')
         };
         localStorage.setItem('cc_student_token', res.token);
         localStorage.setItem('cc_student_user', JSON.stringify(syncedUser));
@@ -96,7 +77,25 @@ export function StudentAuthProvider({ children }) {
         setOauthError(null);
       }
     } catch (err) {
-      console.error('Failed to sync student profile with database:', err);
+      console.error('Failed to sync profile with database:', err);
+      if (role === 'editor') {
+        const fallbackEditor = {
+          id: session.user.id,
+          email,
+          name,
+          role: 'editor',
+          avatarUrl,
+          campusId,
+          createdAt: userProfile?.createdAt || session.user.created_at
+        };
+        localStorage.setItem('cc_student_token', session.access_token);
+        localStorage.setItem('cc_student_user', JSON.stringify(fallbackEditor));
+        setStudentToken(session.access_token);
+        setStudentUser(fallbackEditor);
+        setIsAuthModalOpen(false);
+        setOauthError(null);
+        return;
+      }
       setOauthError(
         err.response?.data?.error ||
         err.message ||
@@ -288,7 +287,8 @@ export function StudentAuthProvider({ children }) {
     }
   };
 
-  const openAuthModal = () => {
+  const openAuthModal = (initialTab = 'student') => {
+    setAuthModalInitialTab(initialTab);
     setOauthError(null);
     setIsAuthModalOpen(true);
   };
@@ -306,6 +306,7 @@ export function StudentAuthProvider({ children }) {
         isAuthenticated: Boolean(studentToken && studentUser),
         loading,
         isAuthModalOpen,
+        authModalInitialTab,
         openAuthModal,
         closeAuthModal,
         oauthError,

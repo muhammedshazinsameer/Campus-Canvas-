@@ -31,6 +31,21 @@ function ProtectedRoute({ children, pendingCount, pendingReportsCount }) {
   );
 }
 
+function LoginRoute() {
+  const { isAuthenticated, loading } = useAuth();
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#faf7f0] flex items-center justify-center text-sm font-serif italic text-[#787163]">
+        Verifying editorial credentials...
+      </div>
+    );
+  }
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+  return <LoginPage />;
+}
+
 export default function App() {
   const [pendingCount, setPendingCount] = useState(0);
   const [pendingReportsCount, setPendingReportsCount] = useState(0);
@@ -53,7 +68,7 @@ export default function App() {
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/login" element={<LoginRoute />} />
           <Route
             path="/"
             element={

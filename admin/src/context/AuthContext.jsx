@@ -10,7 +10,21 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     async function verifyExistingSession() {
-      const storedToken = localStorage.getItem('cs_editor_token');
+      // 1. Check for token passed from URL hash/search (seamless editor sign-in from frontend)
+      let storedToken = localStorage.getItem('cs_editor_token');
+      if (typeof window !== 'undefined') {
+        const hashParams = new URLSearchParams(window.location.hash.replace(/^#\/?/, ''));
+        const searchParams = new URLSearchParams(window.location.search);
+        const urlToken = hashParams.get('token') || searchParams.get('token');
+        if (urlToken) {
+          storedToken = urlToken;
+          localStorage.setItem('cs_editor_token', urlToken);
+          setToken(urlToken);
+          // Remove token from browser address bar for cleanliness and security
+          window.history.replaceState(null, '', window.location.pathname);
+        }
+      }
+
       if (!storedToken) {
         setLoading(false);
         return;
