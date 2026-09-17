@@ -275,7 +275,7 @@ export default function Navbar() {
                         {/* Editor Portal link conditionally rendered ONLY for role === 'editor' */}
                         {studentUser?.role === 'editor' && (
                           <a
-                            href={import.meta.env.VITE_ADMIN_URL || 'http://localhost:5174'}
+                            href={import.meta.env.VITE_ADMIN_URL || 'https://campus-canvas-admin.vercel.app'}
                             target="_blank"
                             rel="noreferrer"
                             onClick={() => setIsProfileOpen(false)}

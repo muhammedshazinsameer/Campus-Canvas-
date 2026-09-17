@@ -63,7 +63,7 @@ export default function Footer() {
             </p>
             <div className="space-y-2">
               <a
-                href={import.meta.env.VITE_ADMIN_URL || 'http://localhost:5174'}
+                href={import.meta.env.VITE_ADMIN_URL || 'https://campus-canvas-admin.vercel.app'}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-block text-xs font-semibold text-[#9d4233] hover:underline"
